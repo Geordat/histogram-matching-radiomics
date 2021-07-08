@@ -7,6 +7,7 @@ import imageio
 import skimage.io
 import nibabel as nib
 import glob
+from histogram_matching import ExactHistogramMatcher
 
 
 def insert_segmenetions_path_to_dict(dataset, new_dataset_output_path, dataset_path, contrast_type):
