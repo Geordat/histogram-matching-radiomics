@@ -131,6 +131,31 @@ def histogram_equalization_CLAHE(images_name, number_bins=256, tile_grid_size=(3
     
     return clahe_images
 
+def exact_histogram_matching(images_name, ref_img):
+        
+    images  = [ cv2.imread(x, 0)  for x in images_name]
+    
+    reference_histogram = ExactHistogramMatcher.get_histogram(cv2.imread(ref_img, 0))
+    
+    exact_imgs = [ExactHistogramMatcher.match_image_to_histogram(i, reference_histogram) for i in images ]
+ 
+    histograms = [ cv2.calcHist([x.astype('uint8')], [0], None, [256], [0, 256]) for x in exact_imgs]
+    
+    line =np.arange(0, 256)
+    plt.figure('1')
+    for i in range(0,len(images_name)):
+        plt.xlim(0,255)
+        plt.ylim(0, 5000)
+        plt.plot(line,histograms[i],label=images_name[i])
+        plt.show()
+        
+    images_num = int(math.sqrt(len(images_name)))+1
+    plt.figure('2')
+    for i in range(0,len(images_name)):
+        plt.subplot(images_num,images_num, i+1),plt.imshow(exact_imgs[i],'gray')
+        plt.show()
+ 
+    return exact_imgs
 
 # Histogram Equalization Function
 # Reference: https://docs.opencv.org/master/d5/daf/tutorial_py_histogram_equalization.html
